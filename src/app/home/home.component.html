@@ -1,0 +1,257 @@
+<div
+  [style.background-image]="'url(' + bgImage + ')'"
+  class="bg-center bg-cover"
+>
+  <div
+    class="p-[30px] pb-0 bg-black bg-opacity-50 h-screen flex flex-col justify-between items-center"
+  >
+    <header
+      class="bg-white p-[5px] rounded-[10px] flex justify-between items-center h-[60px] shadow-xl w-full"
+    >
+      <div class="flex gap-[5px] ml-[10px] text-[#04364A]">
+        <i class="fa-solid fa-location-dot text-xl"></i>
+        <h1 class="text-xl font-semibold">
+          {{ weatherData.name }}
+        </h1>
+      </div>
+      <div class="flex gap-[10px]">
+        <div
+          class="bg-sky-600 w-[85px] py-[5px] px-[10px] flex justify-center items-center rounded-[10px] h-[50px] gap-[5px] font-semibold text-white cursor-pointer"
+          title="Humidity"
+        >
+          <i class="fa-solid fa-water"></i>
+          {{ weatherData.humidity }}
+        </div>
+
+        <div
+          class="bg-teal-600 w-[85px] py-[5px] px-[10px] flex justify-center items-center rounded-[10px] h-[50px] gap-[5px] font-semibold text-white cursor-pointer"
+          title="Pressure"
+        >
+          <i class="fa-solid fa-p"></i>
+          {{ weatherData.pressure }}
+        </div>
+
+        <div
+          class="bg-slate-600 w-[85px] py-[5px] px-[10px] flex justify-center items-center rounded-[10px] h-[50px] gap-[5px] font-semibold text-white cursor-pointer"
+          title="Wind"
+        >
+          <i class="fa-solid fa-wind"></i>
+          {{ weatherData.wind }}
+        </div>
+
+        <div
+          class="bg-amber-600 w-[85px] py-[5px] px-[10px] flex justify-center items-center rounded-[10px] h-[50px] gap-[5px] font-semibold text-white cursor-pointer"
+          title="Temperature"
+        >
+          <i class="fa-solid fa-sun"></i>
+          {{ weatherData.temp }}
+        </div>
+      </div>
+    </header>
+
+    <p class="text-5xl text-white shadow-md font-semibold">
+      {{
+        weatherData.description[0].toUpperCase() +
+          weatherData.description.substring(1)
+      }}
+    </p>
+
+    <!-- Loading -->
+    <section
+      *ngIf="!songsData"
+      class="w-[50%] h-[70%] flex justify-start items-center flex-col gap-[20px] pt-[100px]"
+    >
+      <mat-spinner color="accent"></mat-spinner>
+      <div
+        *ngIf="loadingText$ | async as loadingText"
+        class="text-white font-semibold"
+      >
+        <p>{{ loadingText }}</p>
+      </div>
+    </section>
+
+    <!-- Glass styles: bg-opacity-[0.22] bg-white backdrop-blur-sm border-[3px] border-b-0 border-opacity-[0.63] border-white p-3 rounded-t-xl shadow-lg -->
+    <section
+      *ngIf="songsData"
+      class="w-[50%] h-[70%] text-[#164863] overflow-auto"
+    >
+      <mat-accordion>
+        <mat-expansion-panel
+          *ngFor="let outerHeading of songsData; let outerIndex = index"
+          [expanded]="outerStep === outerIndex"
+          (opened)="setStep('outer', outerIndex)"
+          class="outer-accordion"
+        >
+          <mat-expansion-panel-header>
+            <mat-panel-title class="font-bold text-[16px]">
+              {{ outerHeading.name }}
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <!-- Inner Start -->
+          <div>
+            <mat-accordion>
+              <mat-expansion-panel
+                *ngFor="
+                  let innerHeading of outerHeading.search_results;
+                  let innerIndex = index
+                "
+                [expanded]="innerStep === innerIndex"
+                (opened)="setStep('inner', innerIndex)"
+                class="inner-accordion"
+              >
+                <mat-expansion-panel-header>
+                  <mat-panel-title class="font-medium text-[#164863]">
+                    <img
+                      src="{{
+                        innerHeading.Images[innerHeading.Images.length - 1].url
+                      }}"
+                      alt=""
+                      class="w-[40px] h-[40px] mr-[10px] rounded-full border-[1px] border-[#164863]"
+                    />
+                    <div class="flex flex-col">
+                      <p
+                        title="{{ innerHeading.Name }}"
+                        class="w-[400px] overflow-hidden text-ellipsis whitespace-nowrap text-[12px]"
+                      >
+                        {{ innerHeading.Name }}
+                      </p>
+                      <p
+                        title="{{ innerHeading.Album }}"
+                        class="w-[400px] overflow-hidden text-ellipsis whitespace-nowrap font-semibold text-[13px]"
+                      >
+                        {{ innerHeading.Album }}
+                      </p>
+                    </div>
+                  </mat-panel-title>
+                  <div
+                    title="Popularity"
+                    class="ml-auto my-auto mr-[20px] flex items-center gap-[5px] bg-red-700 h-fit rounded-full py-[3px] px-[10px] text-[#9bbec8]"
+                  >
+                    <i class="fa-solid fa-heart text-[12px]"></i>
+                    <p class="text-[12px] mt-[3px] font-bold">
+                      {{ innerHeading.Popularity }}
+                    </p>
+                  </div>
+                </mat-expansion-panel-header>
+
+                <div class="w-full flex border-t border-[#1648634f] pt-4">
+                  <div>
+                    <img
+                      src="{{ innerHeading.Images[0].url }}"
+                      alt=""
+                      class="rounded-xl border border-[#164863] shadow-lg w-[200px] -ml-[10px]"
+                    />
+                  </div>
+                  <div
+                    class="w-[70%] pl-[10px] text-[#164863] flex flex-col gap-[10px] py-[10px]"
+                  >
+                    <div class="flex gap-[10px]">
+                      <p class="font-medium text-[12px]">Artist :</p>
+                      <p
+                        class="font-bold w-[250px] overflow-hidden text-ellipsis whitespace-nowrap"
+                        title="{{ innerHeading.Artist }}"
+                      >
+                        {{ innerHeading.Artist }}
+                      </p>
+                    </div>
+                    <div class="flex gap-[10px]">
+                      <p class="font-medium text-[12px]">Duration :</p>
+                      <p class="font-bold">
+                        {{ innerHeading.Duration }}
+                      </p>
+                    </div>
+                    <div class="flex gap-[10px]">
+                      <p class="font-medium text-[12px]">Spotify URL :</p>
+                      <a
+                        href="{{ innerHeading['Spotify URL'] }}"
+                        class="font-bold hover:opacity-80"
+                      >
+                        Open
+                        <i class="fa-solid fa-link"></i>
+                      </a>
+                    </div>
+
+                    <div class="mt-auto">
+                      <p class="text-[12px] mb-[5px] font-medium">Preview</p>
+                      <audio
+                        src="{{ innerHeading['Song Preview'] }}"
+                        controls
+                        class="w-[100%] h-[35px]"
+                      ></audio>
+                    </div>
+                  </div>
+                </div>
+
+                <mat-action-row>
+                  <button *ngIf="innerStep > 0" (click)="prevStep('inner')">
+                    <p
+                      class="text-[12px] w-[100px] h-[30px] flex justify-center items-center border border-[#164863] p-[5px] px-[10px] rounded-full font-medium text-[#164863]"
+                    >
+                      <i class="fa-solid fa-arrow-left mr-2"></i>
+                      Previous
+                    </p>
+                  </button>
+                  <button
+                    *ngIf="innerStep < outerHeading.search_results.length - 1"
+                    (click)="nextStep('inner')"
+                  >
+                    <p
+                      class="text-[12px] w-[80px] h-[30px] flex justify-center items-center bg-[#164863] p-[5px] px-[10px] rounded-full font-medium text-white"
+                    >
+                      Next
+                      <i class="fa-solid fa-arrow-right ml-2"></i>
+                    </p>
+                  </button>
+                  <button
+                    *ngIf="innerStep === outerHeading.search_results.length - 1"
+                    (click)="nextStep('outer')"
+                  >
+                    <p
+                      class="text-[12px] w-[80px] h-[30px] flex justify-center items-center bg-[#164863] p-[5px] px-[10px] rounded-full font-medium text-white"
+                    >
+                      End
+                    </p>
+                  </button>
+                </mat-action-row>
+              </mat-expansion-panel>
+            </mat-accordion>
+          </div>
+          <!-- Inner End-->
+
+          <mat-action-row>
+            <button *ngIf="outerStep > 0" (click)="prevStep('outer')">
+              <p
+                class="text-[12px] w-[100px] h-[30px] flex justify-center items-center border border-[#164863] p-[5px] px-[10px] rounded-full font-medium text-[#164863] hover:opacity-90"
+              >
+                <i class="fa-solid fa-arrow-left mr-2"></i>
+                Previous
+              </p>
+            </button>
+            <button
+              *ngIf="outerStep < expanderData.length - 1"
+              (click)="nextStep('outer')"
+            >
+              <p
+                class="text-[12px] w-[80px] h-[30px] flex justify-center items-center bg-[#164863] p-[5px] px-[10px] rounded-full font-medium text-white hover:opacity-90"
+              >
+                Next
+                <i class="fa-solid fa-arrow-right ml-2"></i>
+              </p>
+            </button>
+            <button
+              *ngIf="outerStep === expanderData.length - 1"
+              (click)="nextStep('outer')"
+            >
+              <p
+                class="text-[12px] w-[80px] h-[30px] flex justify-center items-center bg-[#164863] p-[5px] px-[10px] rounded-full font-medium text-white hover:opacity-90"
+              >
+                End
+              </p>
+            </button>
+          </mat-action-row>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </section>
+  </div>
+</div>

@@ -1,0 +1,51 @@
+<section class="h-screen bg-[#DAFFFB] flex overflow-hidden">
+  <!-- <button (click)="getLocation()">Get My Location</button> -->
+  <!-- <p *ngIf="locationPermissionDenied">Location permission denied.</p> -->
+  <div class="w-[55vw] h-full flex pl-[150px] pt-[230px]">
+    <div>
+      <h1 class="text-5xl text-[#176B87] leading-[60px]">
+        Hey!💖
+        <br />
+        Welcome to <span class="text-[#04364A] font-semibold">ClimaSongs</span>
+      </h1>
+      <h4 class="mt-[10px]">
+        Get your music in sync with the weather and enjoy <br />
+        a unique listening experience.
+      </h4>
+      <p class="my-[20px]">To get started:</p>
+
+      <span
+        class="bg-[#04364A] px-[10px] py-[5px] rounded-[5px] font-medium text-[#DAFFFB]"
+        >Kindly Allow us to get your location</span
+      >
+    </div>
+  </div>
+  <div class="w-[45vw] flex items-center">
+    <div *ngIf="sharedLocationService.locationPermission === 'denied'">
+      <img
+        src="../../assets/Images/disappointed-up.png"
+        class="w-[600px] ml-[100px]"
+        alt=""
+      />
+      <p class="-mt-[80px] mb-[20px]">Oh No!</p>
+
+      <p
+        class="bg-[#04364A] px-[10px] py-[5px] rounded-[5px] font-medium text-[#DAFFFB] w-fit"
+      >
+        We want your location to continue,
+        <br />
+        Kindly open settings of your browser and reset permission
+      </p>
+    </div>
+
+    <img
+      src="../../assets/Images/location-up.png"
+      *ngIf="
+        sharedLocationService.locationPermission === '' ||
+        sharedLocationService.locationPermission === 'allowed'
+      "
+      alt=""
+      class="-scale-x-100 w-[600px]"
+    />
+  </div>
+</section>
