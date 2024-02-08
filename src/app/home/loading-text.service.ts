@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, timer } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +11,6 @@ export class LoadingTextService {
   private currentTextSubject = new BehaviorSubject<string>(this.loadingTexts[this.currentTextIndex]);
 
   constructor() {
-    // Automatically switch to the next text every 3 seconds
     timer(0, 3000).pipe(
       switchMap(() => this.getNextText())
     ).subscribe();

@@ -7,8 +7,7 @@ import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatExpansionModule} from '@angular/material/expansion';
-import {MatNativeDateModule} from '@angular/material/core';
-import {MatRippleModule} from '@angular/material/core';
+import {MatNativeDateModule, MatRippleModule} from '@angular/material/core';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { SongsService } from './songs.service';
 import { LoadingTextService } from './loading-text.service';
@@ -66,7 +65,6 @@ export class HomeComponent implements OnInit {
     this.innerStep--;
   }
 
-  // Dummy Data for testing
   expanderDataTemp = [
     {
       "name": "Vaseegara",
@@ -5357,14 +5355,12 @@ export class HomeComponent implements OnInit {
           (songData) => {
             this.songsData = songData.data;
 
-            // to convert milliseconds duration into mins and secs
             this.songsData.forEach((song: any) => {
               song.search_results.forEach((info : any) => {
                 info.Duration = Math.floor(info.Duration / 60000) + " mins " + Math.floor(info.Duration / 1000 % 60) + " s";
               })
             });
 
-            // to sort inner data by popularity
             this.songsData = this.songsData.map((item : any) => ({
               ...item, search_results : item.search_results.sort((s1 : any, s2 : any) => s2.Popularity - s1.Popularity)
             }))

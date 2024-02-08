@@ -21,7 +21,6 @@ export class LocationComponent {
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          // Handle the user's location data here
           const latitude = position.coords.latitude;
           const longitude = position.coords.longitude;
 
@@ -42,7 +41,6 @@ export class LocationComponent {
           
           this.sharedLocationService.locationPermission = "allowed";
 
-          // You can now send these coordinates to your backend for weather data retrieval.
           console.log(latitude, longitude);
           this.router.navigate([''])
         },
